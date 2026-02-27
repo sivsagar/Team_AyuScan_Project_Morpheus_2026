@@ -10,9 +10,9 @@ All components are housed in a custom 3D-printed TPU enclosure, providing flexib
 
 ## 🚀 Key Features
 
-- **Real-time ECG-based heart rate monitoring** using the BioAmp EXG Pill.
-- **PPG-based heart rate and SpO₂ measurement** using the MAX30102/MAX30105 sensor.
-- **Non-contact body temperature measurement** using the MLX90614 infrared sensor.
+- **Real-time ECG-based heart rate monitoring** using an integrated ECG Heart Rate Sensor.
+- **PPG-based heart rate and SpO₂ measurement** using a Pulse Oximetry and Heart-Rate Sensor.
+- **Non-contact body temperature measurement** using an infrared digital Temperature Sensor.
 - **Estimated cardiac output calculation** and wireless cloud monitoring using ESP32 and Blynk IoT.
 - **Automatic abnormal condition detection** with live data visualization on mobile and web dashboards.
 - **Compact, wearable design** using a custom 3D-printed TPU enclosure.
@@ -22,34 +22,34 @@ All components are housed in a custom 3D-printed TPU enclosure, providing flexib
 | Component | Description |
 | :--- | :--- |
 | **ESP32** | 38-pin DevKit (Dual-core, Wi-Fi/Bluetooth enabled) |
-| **BioAmp EXG Pill** | Analog front-end for ECG/EMG/EOG/EEG |
-| **MAX30102 / MAX30105** | Pulse Oximetry and Heart-Rate sensor |
-| **MLX90614** | Contactless Infrared (IR) Digital Temperature Sensor |
+| **ECG Heart Rate Sensor** | Analog front-end for ECG/EMG/EOG/EEG |
+| **PPG & SpO₂ Sensor** | Pulse Oximetry and Heart-Rate measurement |
+| **IR Temperature Sensor** | Contactless Infrared (IR) Digital Temperature measurement |
 
 ## 🔌 Pin Configuration
 
-### I2C Bus (MAX3010x & MLX90614)
+### I2C Bus (Vitals & Temperature Sensors)
 *Multiple sensors share the same I2C pins.*
 
-| Sensor Pin | ESP32 Pin |
+| Function | ESP32 Pin |
 | :--- | :--- |
-| **SDA** | GPIO 21 |
-| **SCL** | GPIO 22 |
+| **SDA (Data)** | GPIO 21 |
+| **SCL (Clock)** | GPIO 22 |
 
-### BioAmp EXG Pill
-| Sensor Pin | ESP32 Pin |
+### ECG Heart Rate Sensor
+| Function | ESP32 Pin |
 | :--- | :--- |
-| **OUT** | GPIO 34 (ADC) |
-| **VCC** | 3.3V / 5V |
-| **GND** | GND |
+| **Signal Output** | GPIO 34 (ADC) |
+| **Power (VCC)** | 3.3V / 5V |
+| **Ground (GND)** | GND |
 
 ## 🏗 System Architecture
 
 ```mermaid
 graph TD
-    A["BioAmp EXG Pill (ECG)"] --> E["ESP32"]
-    B["MAX30102 (PPG HR + SpO₂)"] --> E
-    C["MLX90614 (Temperature)"] --> E
+    A["ECG Heart Rate Sensor"] --> E["ESP32"]
+    B["PPG & SpO₂ Sensor"] --> E
+    C["IR Temperature Sensor"] --> E
     E --> F["Signal Processing"]
     F --> G["WiFi Transmission"]
     G --> H["Blynk Cloud Dashboard"]
@@ -69,8 +69,8 @@ graph TD
 
 Ensure you have the following libraries installed in your Arduino IDE:
 
-1. **SparkFun MAX3010x Pulse and Proximity Sensor Library**
-2. **Adafruit MLX90614 Library**
+1. **Pulse and Proximity Sensor Library** (SparkFun MAX3010x)
+2. **Digital Temperature Sensor Library** (Adafruit MLX90614)
 3. **Blynk Library** (for cloud integration)
 
 ## 📂 Project Structure
@@ -78,12 +78,12 @@ Ensure you have the following libraries installed in your Arduino IDE:
 - `BioAmpEXGPill.ino`: Heart rate monitoring via ECG.
 - `MAX30105SpO2.ino`: Integrated HR and SpO2 monitoring.
 - `TempMLX90614.ino`: Body temperature sensing.
-- `MAX_calibiration.cpp`: Utility for calibrating the MAX3010x sensor brightness and thresholds.
+- `MAX_calibiration.cpp`: Utility for calibrating sensor brightness and thresholds.
 
 ## 📄 Usage Instructions
 
 1. **Setup Hardware:** Connect sensors according to the [Pin Configuration](#-pin-configuration).
-2. **Calibration:** Use `MAX_calibiration.cpp` to find optimal LED power for the MAX3010x sensor.
+2. **Calibration:** Use the calibration utility to find optimal LED power for the optical sensors.
 3. **Firmware Upload:** Upload the desired `.ino` file to the ESP32.
 4. **Monitoring:** View live data on the **Serial Monitor (115200 baud)** or via the **Blynk mobile/web app**.
 
